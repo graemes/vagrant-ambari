@@ -6,6 +6,9 @@ include interfering_services
 # Install and enable ntp
 include ntp
 
+# remove ALL unmanaged host resources
+resources { 'host': purge => true }
+
 # Ensure that servers can find themselves even in absence of dns
 class { 'etchosts':
   ownhostname => 'one.cluster'
