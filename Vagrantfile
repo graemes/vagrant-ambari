@@ -3,8 +3,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "centos6.6Min"
-  config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.6-x86_64-v20150426.box"
+  config.vm.box = "thinktainer/centos-6_6-orajdk7-puppet"
+  config.vm.box_url = "https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet"
 
   config.vm.define :one do |one| 
     one.vm.hostname = "one.cluster"
