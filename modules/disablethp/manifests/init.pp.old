@@ -1,0 +1,40 @@
+class rclocal {
+  $rclocal = '/etc/rc.d/rc.local'
+
+file { $rclocal:
+    mode   => 440,
+    owner  => root,
+    group  => root,
+    source => "puppet:///modules/etcrclocal/rc.local"
+}
+  concat { $rclocal:
+    ensure => present,
+    owner => 'root',
+    group => 'root',
+    mode => '0644',
+  }
+
+  concat::fragment{ '00_rc.local_header':
+    target  => $rclocal,
+    content => "#!/bin/bash\n# This file is managed by Puppet, do not modify!\n",
+    order   => '01'
+  }
+
+  concat::fragment{ '05_rc.local_nothp_enabled':
+    target  => $rclocal,
+    content => "\nif test -f /sys/kernel/mm/transparent_hugepage/enabled; then echo never > /sys/kernel/mm/transparent_hugepage/enabled fi\n",
+    order   => '05'
+  }
+
+  concat::fragment{ '06_rc.local_nothp_defrag':
+    target  => $rclocal,
+    content => "\nif test -f /sys/kernel/mm/transparent_hugepage/defrag; then echo never > /sys/kernel/mm/transparent_hugepage/defrag fi\n",
+    order   => '06'
+  }
+
+  concat::fragment{ '99_rc.local_lock_subsys_local':
+    target  => $rclocal,
+    content => "\ntouch /var/lock/subsys/local\n",
+    order   => '99'
+  }
+}

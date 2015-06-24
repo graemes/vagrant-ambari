@@ -12,6 +12,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     one.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", 2048]
     end
+    config.vm.provider "vmware_fusion" do |v|
+      v.vmx["memsize"] = "2048"
+      v.vmx["numvcpus"] = "1"
+    end
 
     one.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "manifest"
@@ -27,11 +31,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     two.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", 2048]
     end
+    config.vm.provider "vmware_fusion" do |v|
+      v.vmx["memsize"] = "2048"
+      v.vmx["numvcpus"] = "1"
+    end
 
     two.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "manifest"
       puppet.module_path = "modules"
       puppet.manifest_file = "two.pp"
+#      puppet.options = "--verbose --debug"
     end
   end
 
@@ -40,6 +49,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     three.vm.network :private_network, ip: "192.168.0.103"
     three.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", 2048]
+    end
+    config.vm.provider "vmware_fusion" do |v|
+      v.vmx["memsize"] = "2048"
+      v.vmx["numvcpus"] = "1"
     end
 
     three.vm.provision "puppet" do |puppet|
