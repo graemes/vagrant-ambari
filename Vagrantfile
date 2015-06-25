@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["modifyvm", :id, "--memory", 2048]
     end
     config.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "2048"
+      v.vmx["memsize"] = "4096"
       v.vmx["numvcpus"] = "1"
     end
 
@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["modifyvm", :id, "--memory", 2048]
     end
     config.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "2048"
+      v.vmx["memsize"] = "4096"
       v.vmx["numvcpus"] = "1"
     end
 
@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.customize ["modifyvm", :id, "--memory", 2048]
     end
     config.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "2048"
+      v.vmx["memsize"] = "4096"
       v.vmx["numvcpus"] = "1"
     end
 
