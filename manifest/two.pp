@@ -9,6 +9,9 @@ include ntp
 # Disable THP and add to rc.local
 include disablethp
 
+# Disable selinux permanently
+ include disableselinux
+
 # remove ALL unmanaged host resources
 resources { 'host': purge => true }
 
@@ -24,5 +27,5 @@ class { 'ambari_agent':
 }
 
 # Establish ordering
-Class['disablethp'] -> Class['interfering_services'] -> Class['ntp'] -> Class['etchosts'] -> Class['ambari_agent']
+Class['disableselinux'] -> Class['disablethp'] -> Class['interfering_services'] -> Class['ntp'] -> Class['etchosts'] -> Class['ambari_agent']
 

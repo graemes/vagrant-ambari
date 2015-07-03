@@ -6,6 +6,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "thinktainer/centos-6_6-orajdk7-puppet"
   config.vm.box_url = "https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet"
 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    # Configure cached packages to be shared between instances of the same base machine.
+    config.cache.scope = :machine
+    # NOTE: this doesn't cache metadata, full offline operation not possible
+    config.cache.auto_detect = true
+    config.cache.synced_folder_opts = {
+      type: :nfs,
+      mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+    }
+  end
+
   config.vm.define :one do |one| 
     one.vm.hostname = "one.cluster"
     one.vm.network :private_network, ip: "192.168.0.101"
@@ -15,6 +26,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider "vmware_fusion" do |v|
       v.vmx["memsize"] = "4096"
       v.vmx["numvcpus"] = "1"
+    end
+    config.vm.provider :libvirt do |v|
+      v.memory = "4096"
+      v.cpus = "1"
     end
 
     one.vm.provision "puppet" do |puppet|
@@ -35,6 +50,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.vmx["memsize"] = "4096"
       v.vmx["numvcpus"] = "1"
     end
+    config.vm.provider :libvirt do |v|
+      v.memory = "4096"
+      v.cpus = "1"
+    end
 
     two.vm.provision "puppet" do |puppet|
       puppet.manifests_path = "manifest"
@@ -53,6 +72,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider "vmware_fusion" do |v|
       v.vmx["memsize"] = "4096"
       v.vmx["numvcpus"] = "1"
+    end
+    config.vm.provider :libvirt do |v|
+      v.memory = "4096"
+      v.cpus = "1"
     end
 
     three.vm.provision "puppet" do |puppet|

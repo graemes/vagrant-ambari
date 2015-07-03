@@ -5,7 +5,7 @@ class interfering_services {
     path    => "/etc/yum/pluginconf.d/refresh-packagekit.conf",
     ensure  => "present",
     replace => true,
-    content => " enabled=0"
+    content => "enabled=0"
   }
 
   # Stop IP Tables

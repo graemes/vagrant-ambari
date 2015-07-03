@@ -17,7 +17,9 @@ class ambari_server ($ownhostname) {
   }
 
   exec { 'ambari-setup':
-    command => "ambari-server setup -s",
+    command => "ambari-server setup -s -j /opt/java_home",
+#    If the jdk hasn't been preinstalled in the box then use the command below
+#    command => "ambari-server setup -s",
     user    => root,
     require => Package[ambari-server],
     timeout => 1800
