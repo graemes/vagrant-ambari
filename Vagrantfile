@@ -6,6 +6,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "thinktainer/centos-6_6-orajdk7-puppet"
   config.vm.box_url = "https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet"
 
+  vmsa = [['one',101],['two',102],['three',103]]
+  envname = ENV['VAGRANT_ENV_NAME']
+  ambarirepo = ENV['AMBARI_REPO'] 
+
   if Vagrant.has_plugin?("vagrant-cachier")
     # Configure cached packages to be shared between instances of the same base machine.
     config.cache.scope = :machine
@@ -17,72 +21,33 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     }
   end
 
-  config.vm.define :one do |one| 
-    one.vm.hostname = "one.cluster"
-    one.vm.network :private_network, ip: "192.168.0.101"
-    one.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", 2048]
-    end
-    config.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "4096"
-      v.vmx["numvcpus"] = "1"
-    end
-    config.vm.provider :libvirt do |v|
-      v.memory = "4096"
-      v.cpus = "1"
-    end
+  vmsa = [['one',101],['two',102],['three',103]]
 
-    one.vm.provision "puppet" do |puppet|
-      puppet.manifests_path = "manifest"
-      puppet.module_path = "modules"
-      puppet.manifest_file = "one.pp"
-#      puppet.options = "--verbose --debug"
+  vmsa.each do |x| 
+    config.vm.define "#{envname}_#{x[0]}" do |node| 
+      node.vm.hostname = "#{x[0]}.cluster"
+      node.vm.network :private_network, ip: "192.168.0.#{x[1]}"
+      node.vm.provider :virtualbox do |v|
+        v.customize ["modifyvm", :id, "--memory", 2048]
+      end
+      config.vm.provider :vmware_fusion do |v|
+        v.vmx["memsize"] = "4096"
+        v.vmx["numvcpus"] = "1"
+      end
+      config.vm.provider :libvirt do |v|
+        v.memory = "4096"
+        v.cpus = "1"
+      end
+
+      node.vm.provision "puppet" do |puppet|
+        puppet.manifests_path = "manifest"
+        puppet.module_path = "modules"
+        puppet.manifest_file = "#{x[0]}.pp"
+#        puppet.options = "--verbose --debug"
+        puppet.facter = {
+          "ambari_repo" => "#{ambarirepo}"
+        }
+      end
     end
   end
-
-  config.vm.define :two do |two| 
-    two.vm.hostname = "two.cluster"
-    two.vm.network :private_network, ip: "192.168.0.102"
-    two.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", 2048]
-    end
-    config.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "4096"
-      v.vmx["numvcpus"] = "1"
-    end
-    config.vm.provider :libvirt do |v|
-      v.memory = "4096"
-      v.cpus = "1"
-    end
-
-    two.vm.provision "puppet" do |puppet|
-      puppet.manifests_path = "manifest"
-      puppet.module_path = "modules"
-      puppet.manifest_file = "two.pp"
-#      puppet.options = "--verbose --debug"
-    end
-  end
-
-  config.vm.define :three do |three| 
-    three.vm.hostname = "three.cluster"
-    three.vm.network :private_network, ip: "192.168.0.103"
-    three.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", 2048]
-    end
-    config.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "4096"
-      v.vmx["numvcpus"] = "1"
-    end
-    config.vm.provider :libvirt do |v|
-      v.memory = "4096"
-      v.cpus = "1"
-    end
-
-    three.vm.provision "puppet" do |puppet|
-      puppet.manifests_path = "manifest"
-      puppet.module_path = "modules"
-      puppet.manifest_file = "three.pp"
-    end
-  end
-
-end
+end                
