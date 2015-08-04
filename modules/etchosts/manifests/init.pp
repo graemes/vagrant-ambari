@@ -1,21 +1,27 @@
 # Ensure that the machines in the cluster can find each other without DNS
 class etchosts ($ownhostname) {
+  host { 'host_ambari':
+    name  => 'ambari.cluster',
+    alias => ['ambari', 'ambari.cluster'],
+    ip    => '192.168.0.101'
+  }
+
   host { 'host_one':
     name  => 'one.cluster',
     alias => ['one', 'one.cluster'],
-    ip    => '192.168.0.101'
+    ip    => '192.168.0.102'
   }
 
   host { 'host_two':
     name  => 'two.cluster',
     alias => ['two', 'two.cluster'],
-    ip    => '192.168.0.102'
+    ip    => '192.168.0.103'
   }
 
   host { 'host_three':
     name  => 'three.cluster',
     alias => ['three', 'three.cluster'],
-    ip    => '192.168.0.103'
+    ip    => '192.168.0.104'
   }
 
   file { 'agent_hostname':

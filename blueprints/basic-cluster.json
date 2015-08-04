@@ -3,7 +3,15 @@
   "default_password" : "admin",
   "host_groups" :[
     {
-      "name" : "host_group_1", 
+      "name" : "ambari", 
+      "hosts" : [         
+        {
+          "fqdn" : "ambari.cluster"
+        }
+      ]
+    },
+    {
+      "name" : "master", 
       "hosts" : [         
         {
           "fqdn" : "one.cluster"
@@ -11,16 +19,11 @@
       ]
     },
     {
-      "name" : "host_group_2", 
+      "name" : "slave", 
       "hosts" : [         
         {
           "fqdn" : "two.cluster"
-        }
-      ]
-    },
-    {
-      "name" : "host_group_3", 
-      "hosts" : [         
+        },
         {
           "fqdn" : "three.cluster"
         }

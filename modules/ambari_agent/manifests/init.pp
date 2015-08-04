@@ -1,24 +1,13 @@
-
 class ambari_agent ($ownhostname, $serverhostname) {
   Exec {
     path => ["/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/"] }
 
-
-  # Ambari Repo
-  exec { 'get-ambari-agent-repo':
-#    command => "wget http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.0.1/ambari.repo",
-    command => "wget $ambari_repo",
-    cwd     => '/etc/yum.repos.d/',
-    creates => '/etc/yum.repos.d/ambari.repo',
-    user    => root
-  }
-
-  # Ambari Agent
+  # Ambari Agent 
   package { 'ambari-agent':
     ensure  => present,
-    require => Exec[get-ambari-agent-repo]
+    require => [ Exec[get-centos-repo], Exec[get-ambari-repo] ]
   }
-
+  
   file_line { 'ambari-agent-ini-hostname':
     ensure  => present,
     path    => '/etc/ambari-agent/conf/ambari-agent.ini',

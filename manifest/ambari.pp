@@ -20,13 +20,19 @@ resources { 'host': purge => true }
 
 # Ensure that servers can find themselves even in absence of dns
 class { 'etchosts':
-  ownhostname => 'three.cluster'
+  ownhostname => 'ambari.cluster'
 }
 
+# Install and enable ambari server
+class { 'ambari_server':
+  ownhostname => 'ambari.cluster'
+}
+
+# Install and enable ambari agent
 class { 'ambari_agent':
-  serverhostname => "ambari.cluster",
-  ownhostname    => "three.cluster"
+  ownhostname    => 'ambari.cluster',
+  serverhostname => 'ambari.cluster'
 }
 
 # Establish ordering
-Class['get_repos'] -> Class['disableselinux'] -> Class['disablethp'] -> Class['interfering_services'] -> Class['ntp'] -> Class['etchosts'] -> Class['ambari_agent']
+Class['get_repos'] -> Class['disableselinux'] -> Class['disablethp'] -> Class['interfering_services'] -> Class['ntp'] -> Class['etchosts'] -> Class['ambari_server'] -> Class['ambari_agent']

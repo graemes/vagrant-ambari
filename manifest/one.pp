@@ -1,4 +1,7 @@
-# VM-Configuration of the ambari server. It functions as the name node and resource manager.
+# VM-Configuration of an ambari agent that is monitored by the ambari server.
+
+# Get repositories
+include get_repos
 
 # Turn off interfering services
 include interfering_services
@@ -10,7 +13,7 @@ include ntp
 include disablethp
 
 # Disable selinux permanently
-include disableselinux
+ include disableselinux
 
 # remove ALL unmanaged host resources
 resources { 'host': purge => true }
@@ -20,16 +23,11 @@ class { 'etchosts':
   ownhostname => 'one.cluster'
 }
 
-# Install and enable ambari server
-class { 'ambari_server':
-  ownhostname => 'one.cluster'
-}
-
-# Install and enable ambari agent
 class { 'ambari_agent':
-  ownhostname    => 'one.cluster',
-  serverhostname => 'one.cluster'
+  serverhostname => "ambari.cluster",
+  ownhostname    => "one.cluster"
 }
 
 # Establish ordering
-Class['disableselinux'] -> Class['disablethp'] -> Class['interfering_services'] -> Class['ntp'] -> Class['etchosts'] -> Class['ambari_server'] -> Class['ambari_agent']
+Class['get_repos'] -> Class['disableselinux'] -> Class['disablethp'] -> Class['interfering_services'] -> Class['ntp'] -> Class['etchosts'] -> Class['ambari_agent']
+

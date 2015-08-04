@@ -20,8 +20,8 @@ class disablethp {
 # You can put your own initialization stuff in here if you don't
 # want to do the full Sys V style init stuff.
 
-if test -f /sys/kernel/mm/transparent_hugepage/enabled; then echo never > /sys/kernel/mm/transparent_hugepage/enabled fi
-if test -f /sys/kernel/mm/transparent_hugepage/defrag; then echo never > /sys/kernel/mm/transparent_hugepage/defrag fi
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then echo never > /sys/kernel/mm/transparent_hugepage/enabled; fi
+if test -f /sys/kernel/mm/transparent_hugepage/defrag; then echo never > /sys/kernel/mm/transparent_hugepage/defrag; fi
 touch /var/lock/subsys/local
 "
   file { "/etc/rc.d/rc.local":

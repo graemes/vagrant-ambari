@@ -45,7 +45,7 @@
     },
     {
       "core-site" : {
-        "fs.defaultFS" : "hdfs://%HOSTGROUP::host_group_1%:8020",
+        "fs.defaultFS" : "hdfs://%HOSTGROUP::master%:8020",
         "fs.trash.interval" : "360",
         "hadoop.http.authentication.simple.anonymous.allowed" : "true",
         "hadoop.security.auth_to_local" : "\n        RULE:[2:$1@$0]([rn]m@.*)s/.*/yarn/\n        RULE:[2:$1@$0](jhs@.*)s/.*/mapred/\n        RULE:[2:$1@$0]([nd]n@.*)s/.*/hdfs/\n        RULE:[2:$1@$0](hm@.*)s/.*/hbase/\n        RULE:[2:$1@$0](rs@.*)s/.*/hbase/\n        DEFAULT",
@@ -140,24 +140,24 @@
         "dfs.journalnode.http-address" : "0.0.0.0:8480",
         "dfs.namenode.accesstime.precision" : "0",
         "dfs.namenode.avoid.read.stale.datanode" : "true",
-        "dfs.namenode.avoid.write.stale.datanode" : "true",
+        "dfs.namenode.avoid.write.stale.datnode" : "true",
         "dfs.namenode.checkpoint.dir" : "/hadoop/hdfs/namesecondary",
         "dfs.namenode.checkpoint.edits.dir" : "${dfs.namenode.checkpoint.dir}",
         "dfs.namenode.checkpoint.period" : "21600",
         "dfs.namenode.checkpoint.txns" : "1000000",
         "dfs.namenode.handler.count" : "40",
-        "dfs.namenode.http-address" : "%HOSTGROUP::host_group_1%:50070",
-        "dfs.namenode.https-address" : "%HOSTGROUP::host_group_1%:50470",
+        "dfs.namenode.http-address" : "%HOSTGROUP::master%:50070",
+        "dfs.namenode.https-address" : "%HOSTGROUP::master%:50470",
         "dfs.namenode.name.dir" : "/hadoop/hdfs/namenode",
         "dfs.namenode.name.dir.restore" : "true",
         "dfs.namenode.safemode.threshold-pct" : "1.0f",
-        "dfs.namenode.secondary.http-address" : "%HOSTGROUP::host_group_2%:50090",
+        "dfs.namenode.secondary.http-address" : "%HOSTGROUP::master%:50090",
         "dfs.namenode.stale.datanode.interval" : "30000",
         "dfs.namenode.startup.delay.block.deletion.sec" : "3600",
         "dfs.namenode.write.stale.datanode.ratio" : "1.0f",
         "dfs.permissions.enabled" : "true",
         "dfs.permissions.superusergroup" : "hdfs",
-        "dfs.replication" : "3",
+        "dfs.replication" : "2",
         "dfs.replication.max" : "50",
         "dfs.support.append" : "true",
         "dfs.webhdfs.enabled" : "true",
@@ -185,11 +185,11 @@
         "mapreduce.framework.name" : "yarn",
         "mapreduce.job.emit-timeline-data" : "false",
         "mapreduce.job.reduce.slowstart.completedmaps" : "0.05",
-        "mapreduce.jobhistory.address" : "%HOSTGROUP::host_group_3%:10020",
+        "mapreduce.jobhistory.address" : "%HOSTGROUP::master%:10020",
         "mapreduce.jobhistory.bind-host" : "0.0.0.0",
         "mapreduce.jobhistory.done-dir" : "/mr-history/done",
         "mapreduce.jobhistory.intermediate-done-dir" : "/mr-history/tmp",
-        "mapreduce.jobhistory.webapp.address" : "%HOSTGROUP::host_group_3%:19888",
+        "mapreduce.jobhistory.webapp.address" : "%HOSTGROUP::master%:19888",
         "mapreduce.map.java.opts" : "-Xmx546m",
         "mapreduce.map.log.level" : "INFO",
         "mapreduce.map.memory.mb" : "682",
@@ -248,7 +248,7 @@
     {
       "yarn-site" : {
         "hadoop.registry.rm.enabled" : "false",
-        "hadoop.registry.zk.quorum" : "%HOSTGROUP::host_group_1%:2181,%HOSTGROUP::host_group_3%:2181,%HOSTGROUP::host_group_2%:2181",
+        "hadoop.registry.zk.quorum" : "%HOSTGROUP::slave%:2181,%HOSTGROUP::master%:2181",
         "yarn.acl.enable" : "false",
         "yarn.admin.acl" : "",
         "yarn.application.classpath" : "$HADOOP_CONF_DIR,/usr/hdp/current/hadoop-client/*,/usr/hdp/current/hadoop-client/lib/*,/usr/hdp/current/hadoop-hdfs-client/*,/usr/hdp/current/hadoop-hdfs-client/lib/*,/usr/hdp/current/hadoop-yarn-client/*,/usr/hdp/current/hadoop-yarn-client/lib/*",
@@ -256,7 +256,7 @@
         "yarn.client.nodemanager-connect.retry-interval-ms" : "10000",
         "yarn.log-aggregation-enable" : "true",
         "yarn.log-aggregation.retain-seconds" : "2592000",
-        "yarn.log.server.url" : "http://%HOSTGROUP::host_group_3%:19888/jobhistory/logs",
+        "yarn.log.server.url" : "http://%HOSTGROUP::master%:19888/jobhistory/logs",
         "yarn.node-labels.fs-store.retry-policy-spec" : "2000, 500",
         "yarn.node-labels.fs-store.root-dir" : "/system/yarn/node-labels",
         "yarn.node-labels.manager-class" : "org.apache.hadoop.yarn.server.resourcemanager.nodelabels.MemoryRMNodeLabelsManager",
@@ -294,8 +294,8 @@
         "yarn.nodemanager.resource.percentage-physical-cpu-limit" : "100",
         "yarn.nodemanager.vmem-check-enabled" : "false",
         "yarn.nodemanager.vmem-pmem-ratio" : "2.1",
-        "yarn.resourcemanager.address" : "%HOSTGROUP::host_group_3%:8050",
-        "yarn.resourcemanager.admin.address" : "%HOSTGROUP::host_group_3%:8141",
+        "yarn.resourcemanager.address" : "%HOSTGROUP::master%:8050",
+        "yarn.resourcemanager.admin.address" : "%HOSTGROUP::master%:8141",
         "yarn.resourcemanager.am.max-attempts" : "2",
         "yarn.resourcemanager.bind-host" : "0.0.0.0",
         "yarn.resourcemanager.connect.max-wait.ms" : "900000",
@@ -303,17 +303,17 @@
         "yarn.resourcemanager.fs.state-store.retry-policy-spec" : "2000, 500",
         "yarn.resourcemanager.fs.state-store.uri" : " ",
         "yarn.resourcemanager.ha.enabled" : "false",
-        "yarn.resourcemanager.hostname" : "%HOSTGROUP::host_group_3%",
+        "yarn.resourcemanager.hostname" : "%HOSTGROUP::master%",
         "yarn.resourcemanager.nodes.exclude-path" : "/etc/hadoop/conf/yarn.exclude",
         "yarn.resourcemanager.recovery.enabled" : "false",
-        "yarn.resourcemanager.resource-tracker.address" : "%HOSTGROUP::host_group_3%:8025",
-        "yarn.resourcemanager.scheduler.address" : "%HOSTGROUP::host_group_3%:8030",
+        "yarn.resourcemanager.resource-tracker.address" : "%HOSTGROUP::master%:8025",
+        "yarn.resourcemanager.scheduler.address" : "%HOSTGROUP::master%:8030",
         "yarn.resourcemanager.scheduler.class" : "org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler",
         "yarn.resourcemanager.state-store.max-completed-applications" : "${yarn.resourcemanager.max-completed-applications}",
         "yarn.resourcemanager.store.class" : "org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore",
         "yarn.resourcemanager.system-metrics-publisher.dispatcher.pool-size" : "10",
         "yarn.resourcemanager.system-metrics-publisher.enabled" : "true",
-        "yarn.resourcemanager.webapp.address" : "%HOSTGROUP::host_group_3%:8088",
+        "yarn.resourcemanager.webapp.address" : "%HOSTGROUP::master%:8088",
         "yarn.resourcemanager.webapp.delegation-token-auth-filter.enabled" : "false",
         "yarn.resourcemanager.work-preserving-recovery.enabled" : "false",
         "yarn.resourcemanager.work-preserving-recovery.scheduling-wait-ms" : "10000",
@@ -325,7 +325,7 @@
         "yarn.resourcemanager.zk-timeout-ms" : "10000",
         "yarn.scheduler.maximum-allocation-mb" : "2048",
         "yarn.scheduler.minimum-allocation-mb" : "682",
-        "yarn.timeline-service.address" : "%HOSTGROUP::host_group_2%:10200",
+        "yarn.timeline-service.address" : "%HOSTGROUP::master%:10200",
         "yarn.timeline-service.bind-host" : "0.0.0.0",
         "yarn.timeline-service.client.max-retries" : "30",
         "yarn.timeline-service.client.retry-interval-ms" : "1000",
@@ -341,8 +341,8 @@
         "yarn.timeline-service.store-class" : "org.apache.hadoop.yarn.server.timeline.LeveldbTimelineStore",
         "yarn.timeline-service.ttl-enable" : "true",
         "yarn.timeline-service.ttl-ms" : "2678400000",
-        "yarn.timeline-service.webapp.address" : "%HOSTGROUP::host_group_2%:8188",
-        "yarn.timeline-service.webapp.https.address" : "%HOSTGROUP::host_group_2%:8190"
+        "yarn.timeline-service.webapp.address" : "%HOSTGROUP::master%:8188",
+        "yarn.timeline-service.webapp.https.address" : "%HOSTGROUP::master%:8190"
       }
     },
     {
@@ -370,26 +370,20 @@
   ],
   "host_groups" : [
     {
-      "name" : "host_group_1",
-      "configurations" : [ ],
+      "name" : "ambari",
+      "configurations" : [
+        {
+          "nagios-env" : {
+          "nagios_contact": "root@ambari.cluster"
+          }
+        }
+      ],
       "components" : [
-        {
-          "name" : "ZOOKEEPER_SERVER"
-        },
-        {
-          "name" : "ZOOKEEPER_CLIENT"
-        },
         {
           "name" : "AMBARI_SERVER"
         },
         {
           "name" : "GANGLIA_SERVER"
-        },
-        {
-          "name" : "NAMENODE"
-        },
-        {
-          "name" : "NODEMANAGER"
         },
         {
           "name" : "HDFS_CLIENT"
@@ -404,16 +398,13 @@
           "name" : "MAPREDUCE2_CLIENT"
         },
         {
-          "name" : "DATANODE"
-        },
-        {
           "name" : "GANGLIA_MONITOR"
         }
       ],
       "cardinality" : "1"
     },
     {
-      "name" : "host_group_3",
+      "name" : "master",
       "configurations" : [ ],
       "components" : [
         {
@@ -426,44 +417,10 @@
           "name" : "HISTORYSERVER"
         },
         {
-          "name" : "NODEMANAGER"
-        },
-        {
-          "name" : "HDFS_CLIENT"
-        },
-        {
-          "name" : "YARN_CLIENT"
-        },
-        {
-          "name" : "MAPREDUCE2_CLIENT"
-        },
-        {
-          "name" : "DATANODE"
-        },
-        {
-          "name" : "GANGLIA_MONITOR"
-        },
-        {
-          "name" : "RESOURCEMANAGER"
-        }
-      ],
-      "cardinality" : "1"
-    },
-    {
-      "name" : "host_group_2",
-      "configurations" : [ ],
-      "components" : [
-        {
-          "name" : "ZOOKEEPER_SERVER"
-        },
-        {
-          "name" : "ZOOKEEPER_CLIENT"
-        },
-        {
           "name" : "APP_TIMELINE_SERVER"
         },
         {
-          "name" : "NODEMANAGER"
+          "name" : "NAMENODE"
         },
         {
           "name" : "HDFS_CLIENT"
@@ -478,13 +435,32 @@
           "name" : "MAPREDUCE2_CLIENT"
         },
         {
+          "name" : "GANGLIA_MONITOR"
+        },
+        {
+          "name" : "RESOURCEMANAGER"
+        }
+      ],
+      "cardinality" : "1"
+    },
+    {
+      "name" : "slave",
+      "configurations" : [ ],
+      "components" : [
+        {
+          "name" : "ZOOKEEPER_SERVER"
+        },
+        {
+          "name" : "NODEMANAGER"
+        },
+        {
           "name" : "DATANODE"
         },
         {
           "name" : "GANGLIA_MONITOR"
         }
       ],
-      "cardinality" : "1"
+      "cardinality" : "2"
     }
   ],
   "Blueprints" : {

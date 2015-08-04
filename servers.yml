@@ -1,0 +1,26 @@
+---
+- name: ambari
+  box: thinktainer/centos-6_6-orajdk7-puppet
+  box_url: https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet
+  ram: 2048
+  vcpu: 1
+  ipaddr: 101
+- name: one 
+  box: thinktainer/centos-6_6-orajdk7-puppet
+  box_url: https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet
+  ram: 4096
+  vcpu: 1
+  ipaddr: 102
+- name: two
+  box: thinktainer/centos-6_6-orajdk7-puppet
+  box_url: https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet
+  ram: 4096
+  vcpu: 1
+  ipaddr: 103
+- name: three
+  box: thinktainer/centos-6_6-orajdk7-puppet
+  box_url: https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet
+  ram: 4096
+  vcpu: 1
+  ipaddr: 104
+

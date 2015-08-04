@@ -1,53 +1,70 @@
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
+# Specify Vagrant version, Vagrant API version, and Vagrant clone location
+Vagrant.require_version ">= 1.6.0"
+VAGRANTFILE_API_VERSION = "2"
+ENV['VAGRANT_VMWARE_CLONE_DIRECTORY'] = '~/.vagrant'
+
+# Require 'yaml' module
+require 'yaml'
+
+# Read YAML file to get VM configuration information
+# Edit servers.yml to change VM configuration details
+servers = YAML.load_file('servers.yml')
+
+# Create and configure the VMs
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "thinktainer/centos-6_6-orajdk7-puppet"
-  config.vm.box_url = "https://atlas.hashicorp.com/thinktainer/boxes/centos-6_6-orajdk7-puppet"
-
-  vmsa = [['one',101],['two',102],['three',103]]
   envname = ENV['VAGRANT_ENV_NAME']
   ambarirepo = ENV['AMBARI_REPO'] 
+  centosrepo = ENV['CENTOS_REPO'] 
 
-  if Vagrant.has_plugin?("vagrant-cachier")
-    # Configure cached packages to be shared between instances of the same base machine.
-    config.cache.scope = :machine
-    # NOTE: this doesn't cache metadata, full offline operation not possible
-    config.cache.auto_detect = true
-    config.cache.synced_folder_opts = {
-      type: :nfs,
-      mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-    }
-  end
+  # Iterate through entries in YAML file to create VMs
+  servers.each do |servers|
+ 
+    # Use Vagrant's default insecure SSH key
+    config.ssh.insert_key = false
+    
+    # Configure the VMs per details in servers.yml
+    config.vm.define "#{envname}_#{servers['name']}" do |srv|
+    
+      # Don't check for box updates
+      srv.vm.box_check_update = false
+    
+      # Specify the hostname of the VM
+      srv.vm.hostname = "#{servers['name']}.cluster"
+    
+      # Specify the Vagrant box to use
+      srv.vm.box = servers["box"]
+      srv.vm.box_url = servers["box_url"] 
+ 
+      # Specify the ip address of the VM
+      srv.vm.network :private_network, ip: "192.168.0.#{servers['ipaddr']}"
 
-  vmsa = [['one',101],['two',102],['three',103]]
+      # Configure VMs with RAM and CPUs per settings in servers.yml
+      srv.vm.provider :virtualbox do |vmw|
+        vmw.customize ["modifyvm", :id, "--memory", servers["ram"]]
+      end # srv.vm.provider
+      srv.vm.provider :vmware_fusion do |vmw|
+        vmw.vmx["memsize"] = servers["ram"]
+        vmw.vmx["numvcpus"] = servers["vcpu"]   
+      end # srv.vm.provider
+      srv.vm.provider :libvirt do |vmw|
+        vmw.memory = servers["ram"]
+        vmw.cpus = servers["vcpu"]
+      end # srv.vm.provider
 
-  vmsa.each do |x| 
-    config.vm.define "#{envname}_#{x[0]}" do |node| 
-      node.vm.hostname = "#{x[0]}.cluster"
-      node.vm.network :private_network, ip: "192.168.0.#{x[1]}"
-      node.vm.provider :virtualbox do |v|
-        v.customize ["modifyvm", :id, "--memory", 2048]
-      end
-      config.vm.provider :vmware_fusion do |v|
-        v.vmx["memsize"] = "4096"
-        v.vmx["numvcpus"] = "1"
-      end
-      config.vm.provider :libvirt do |v|
-        v.memory = "4096"
-        v.cpus = "1"
-      end
-
-      node.vm.provision "puppet" do |puppet|
+      srv.vm.provision "puppet" do |puppet|
         puppet.manifests_path = "manifest"
         puppet.module_path = "modules"
-        puppet.manifest_file = "#{x[0]}.pp"
+        puppet.manifest_file = "#{servers['name']}.pp"
 #        puppet.options = "--verbose --debug"
         puppet.facter = {
-          "ambari_repo" => "#{ambarirepo}"
+          "ambari_repo" => "#{ambarirepo}",
+          "centos_repo" => "#{centosrepo}"
         }
-      end
-    end
-  end
-end                
+      end# vm.provision
+    end # config.vm.define
+  end # servers.each
+end # Vagrant.configure
